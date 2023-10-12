@@ -1,0 +1,115 @@
+<div id="calc-encapsed">
+
+    <h1>over-engineered calculator</h1>
+    
+    <table id="calculator"> 
+        <tr> 
+            <td colspan="3"> 
+                <input type="text" id="expression"> 
+            </td> 
+            <td><input type="button" value="c" onclick="clearExpr()"></td> 
+        </tr> 
+    
+        <tr> 
+            <td><input type="button" value="1" onclick="addToExpr('1')"></td> 
+            <td><input type="button" value="2" onclick="addToExpr('2')"></td> 
+            <td><input type="button" value="3" onclick="addToExpr('3')"></td> 
+            <td><input type="button" value="/" onclick="addToExpr('/')"></td> 
+        </tr> 
+        <tr> 
+            <td><input type="button" value="4" onclick="addToExpr('4')"></td> 
+            <td><input type="button" value="5" onclick="addToExpr('5')"></td> 
+            <td><input type="button" value="6" onclick="addToExpr('6')"></td> 
+            <td><input type="button" value="*" onclick="addToExpr('*')"></td> 
+        </tr> 
+        <tr> 
+            <td><input type="button" value="7" onclick="addToExpr('7')"></td> 
+            <td><input type="button" value="8" onclick="addToExpr('8')"></td> 
+            <td><input type="button" value="9" onclick="addToExpr('9')"></td> 
+            <td><input type="button" value="-" onclick="addToExpr('-')"></td> 
+        </tr> 
+        <tr> 
+            <td><input type="button" value="0" onclick="addToExpr('0')"></td> 
+            <td><input type="button" value="." onclick="addToExpr('.')"></td> 
+            <td><input type="button" value="=" onclick="evaluateExpr()"></td> 
+            <td><input type="button" value="+" onclick="addToExpr('+')"></td> 
+        </tr> 
+        <tr>
+            <td colspan="4">
+                <input type="button" value="update log" onclick="updateLog()">
+            </td>
+        </tr>
+    </table> 
+    
+    
+</div>
+<div id="log-encapsed">
+    <ul id="log">
+    </ul>
+</div>
+
+<script>
+    function addToExpr(val){
+        document.getElementById("expression").value += val
+    }
+    function clearExpr(){
+        document.getElementById("expression").value = ""
+    }
+    async function  evaluateExpr(){
+        expr = document.getElementById("expression").value
+        result = await fetch("/expression", {
+            method: "POST",
+            body: expr,
+        })
+        const text = await result.text()
+        document.getElementById("expression").value = text
+        console.log(text)
+    }
+    async function updateLog(){
+        log = document.getElementById("log")
+        log.innerHTML = ''
+
+        res = await fetch("/log", {
+            method: "GET"
+        })
+        jsonlog = await res.json()
+
+        jsonlog.forEach(el => {
+            listitem = document.createElement("li")
+            listitem.appendChild(document.createTextNode(
+                "expression: " + el.Expression + " result: " + el.Result))
+            log.appendChild(listitem)
+        });
+
+    }
+</script>
+
+<style>
+    body {
+        background-color:mistyrose;
+    }
+
+    div#calc-encapsed {
+        border-style: solid;
+        border-width: 1px;
+        border-color:coral;
+        
+        width: 20%;
+        margin: auto;
+    }
+
+    div#log-encapsed {
+        width: 20%;
+        margin:auto;
+    }
+
+    table {
+        margin: auto;
+    }
+
+    input {
+        width: 100%;
+    }
+
+</style>
+
