@@ -40,6 +40,11 @@
                 <input type="button" value="update log" onclick="updateLog()">
             </td>
         </tr>
+        <tr>
+            <td colspan="4">
+                <input type="button" value="prev expr" onclick="prevExpr()">
+            </td>
+        </tr>
     </table> 
     
     
@@ -50,11 +55,20 @@
 </div>
 
 <script>
+    let jsonlog = []
+    let logSelect = 0
     function addToExpr(val){
         document.getElementById("expression").value += val
     }
     function clearExpr(){
         document.getElementById("expression").value = ""
+        logSelect = 0
+    }
+    function prevExpr(){
+        console.log(jsonlog)
+        document.getElementById("expression").value = jsonlog[jsonlog.length - logSelect - 1].Expression
+        logSelect++
+
     }
     async function  evaluateExpr(){
         expr = document.getElementById("expression").value
