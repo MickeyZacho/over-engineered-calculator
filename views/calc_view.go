@@ -13,7 +13,7 @@ type Page struct {
 
 func HandleViewCalculator(w http.ResponseWriter, r *http.Request) {
 	p := &Page{Title: "calculator", Body: []byte("This is a sample Page.")}
-	t, err := template.ParseFiles("views/calculator.html")
+	t, err := template.ParseFiles("views/calc.html")
 	if err != nil {
 		fmt.Println(err)
 		return

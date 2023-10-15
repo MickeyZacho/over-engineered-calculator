@@ -40,11 +40,11 @@
                 <input type="button" value="update log" onclick="updateLog()">
             </td>
         </tr>
-        <tr>
+        <!-- <tr>
             <td colspan="4">
                 <input type="button" value="prev expr" onclick="prevExpr()">
             </td>
-        </tr>
+        </tr> -->
     </table> 
     
     
@@ -52,11 +52,26 @@
 <div id="log-encapsed">
     <ul id="log">
     </ul>
+    <!-- <button onclick="() => selectLog(logSelect)">sele</button> -->
 </div>
 
 <script>
     let jsonlog = []
     let logSelect = 0
+    function selectLog(index){
+        console.log("selectLog")
+        oldItem = document.getElementById("log").childNodes[logSelect]
+        console.log("old: ", oldItem)
+        oldItem.className = "notSelected"
+        console.log(index)
+        console.log(jsonlog)
+        log = jsonlog[index] 
+        document.getElementById("expression").value = log.Expression
+        logSelect = index
+        listItem = document.getElementById("log").childNodes[index]
+        listItem.className = "selected"
+
+    }
     function addToExpr(val){
         document.getElementById("expression").value += val
     }
@@ -67,8 +82,14 @@
     function prevExpr(){
         console.log(jsonlog)
         document.getElementById("expression").value = jsonlog[jsonlog.length - logSelect - 1].Expression
+        selectLog(logSelect)
         logSelect++
-
+    }
+    function updateSelectionId(){
+        listItem = document.getElementById("log").childNodes[2]
+        listItem.className = "selected"
+        console.log("here")
+        console.log(listItem)
     }
     async function  evaluateExpr(){
         expr = document.getElementById("expression").value
@@ -89,10 +110,16 @@
         })
         jsonlog = await res.json()
 
-        jsonlog.forEach(el => {
+        jsonlog.forEach((el, index) => {
             listitem = document.createElement("li")
+            listitem.className = "notSelected"
+            listitem.onclick = function() { selectLog(index)}
             listitem.appendChild(document.createTextNode(
                 "expression: " + el.Expression + " result: " + el.Result))
+
+            if(index == logSelect) {
+                listitem.class = "selected"
+            }
             log.appendChild(listitem)
         });
 
@@ -132,6 +159,13 @@
 
     input {
         width: 100%;
+    }
+
+    li:hover {
+        background-color: aliceblue;
+    }
+    .selected{
+        background-color: azure;
     }
 
 </style>

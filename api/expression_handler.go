@@ -1,6 +1,8 @@
 package api
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"go/token"
 	"go/types"
@@ -8,22 +10,10 @@ import (
 	"net/http"
 )
 
-type User struct {
-	Name string
-	Id   int
-}
-
 type UserLog struct {
 	User User
 	Log  []LogEntry
 }
-
-type LogEntry struct {
-	Expression string
-	Result     string
-}
-
-var ExpressionLog []LogEntry
 
 func HandlePostExpression(w http.ResponseWriter, r *http.Request) {
 
@@ -47,7 +37,26 @@ func HandlePostExpression(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ExpressionLog = append(ExpressionLog, LogEntry{Expression: expr, Result: result.Value.String()})
+	// Creating log and making it a *bytes.Reader
+	log := LogEntry{Expression: expr, Result: result.Value.String()}
+	logbytes, err := json.Marshal(log)
+	if err != nil {
+		io.WriteString(w, err.Error())
+		return
+	}
+	bodyReader := bytes.NewReader(logbytes)
+
+	// sending log to the logservice
+	url := "http://localhost:8080/log"
+	method := "POST"
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, bodyReader)
+	if err != nil {
+		fmt.Println(err)
+		io.WriteString(w, err.Error())
+		return
+	}
+	client.Do(req)
 
 	io.WriteString(w, result.Value.String())
 
