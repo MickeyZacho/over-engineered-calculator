@@ -34,3 +34,4 @@ version2 contains the following changes:
     - authorization is not implemented
     - storing and accessing logs with a specific user is not implemented
     - email verification is not implemented
+    - testing is unfortunately non-existent
