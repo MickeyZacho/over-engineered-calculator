@@ -1,7 +1,6 @@
 package main
 
 import (
-	"crypto/sha256"
 	"fmt"
 	"net/http"
 	"over-engineered-calculator/api"
@@ -9,18 +8,6 @@ import (
 )
 
 func main() {
-
-	res, err := api.Eval("4 + 5 * 6")
-	if err != nil {
-		fmt.Println("error happened")
-	}
-
-	h := sha256.New()
-	h.Write([]byte("123" + "very-secret-salt-that-should-live-in-.env"))
-	passHash := h.Sum(nil)
-	fmt.Println(passHash)
-
-	fmt.Printf("eval: %g \n", res)
 
 	http.HandleFunc("/", views.HandleViewCalculator)
 	http.HandleFunc("/expression", api.HandlePostExpression)

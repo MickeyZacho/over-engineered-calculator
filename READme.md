@@ -19,3 +19,18 @@ Nice to have:
 As the title says, it is an over-engineered calculator, which means:
 You should go all-in on design patterns and best practices as well as making sure to fulfill the "must have" requirements.
 The coding language is also up to you, but GO lang would be preferred, since it is part of our tech stack.
+
+
+version2 contains the following changes:
+- a postloghandler has been created to handle updating the logs
+- expression handler sends a logpost instead of accessing our logs directly
+- you can click on a given log to revisit it
+- i started implementing a login solution
+    - can create users stored in the servers runtime
+    - hashes passwords and salt
+    - compares hashes to check if pw is right
+    - logging in creates a jwt that is returned to the client
+    - cannot create a user with a username that is already in use
+    - authorization is not implemented
+    - storing and accessing logs with a specific user is not implemented
+    - email verification is not implemented
